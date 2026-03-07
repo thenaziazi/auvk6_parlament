@@ -1,0 +1,376 @@
+{% extends "base_parlament.html" %}
+{% load static %}
+
+{% block title %}{{ event.name }} — Школьный Парламент{% endblock %}
+
+{% block extra_css %}
+<style>
+    .btn.gold { background: #B8860B; }
+    .btn.gold:hover { background: #DAA520; color: #2a2a2a; }
+    .btn.sm { padding: .35rem .75rem; font-size: .82rem; }
+
+    .event-hero {
+        background: #fff;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(122,0,0,.1);
+        border: 1px solid #d4c4b0;
+        margin-bottom: 2.5rem;
+    }
+    .event-hero-banner {
+        height: 220px;
+        background: linear-gradient(135deg, #7A0000 0%, #a05000 60%, #DAA520 100%);
+        position: relative; overflow: hidden;
+        display: flex; align-items: flex-end; padding: 1.5rem 2rem;
+    }
+    .event-hero-banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .event-hero-banner::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,.65) 0%, transparent 60%); z-index: 1; }
+    .event-hero-info { position: relative; z-index: 2; color: white; }
+    .event-hero-info .badge { display: inline-block; background: #DAA520; color: #2a2a2a; font-size: .75rem; font-weight: 700; padding: .25rem .7rem; border-radius: 20px; margin-bottom: .5rem; text-transform: uppercase; letter-spacing: .05em; }
+    .event-hero-info h2 { font-size: 1.8rem; font-weight: 700; line-height: 1.2; }
+    .event-hero-body { padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; }
+    .event-meta { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .event-meta-item { display: flex; align-items: center; gap: .5rem; color: #6b5a4e; font-size: .9rem; font-weight: 600; }
+    .event-meta-item svg { width: 18px; height: 18px; stroke: #7A0000; fill: none; stroke-width: 2; }
+    .event-description { color: #6b5a4e; font-size: .95rem; margin-top: .4rem; }
+
+    .progress-wrap { margin-top: 1rem; }
+    .progress-label { font-size: .82rem; font-weight: 700; color: #6b5a4e; margin-bottom: .35rem; display: flex; justify-content: space-between; }
+    .progress-bar { height: 8px; background: #d4c4b0; border-radius: 20px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #7A0000, #DAA520); border-radius: 20px; transition: width .5s ease; }
+
+    .tasks-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .tasks-header h3 { font-size: 1.5rem; font-weight: 700; color: #2a2a2a; }
+
+    .filter-bar { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .filter-btn { padding: .4rem 1rem; border-radius: 20px; border: 2px solid #d4c4b0; background: #fff; color: #6b5a4e; font-size: .85rem; font-weight: 700; cursor: pointer; transition: .2s; }
+    .filter-btn:hover, .filter-btn.active { background: #7A0000; border-color: #7A0000; color: white; }
+
+    .kanban { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .kanban-col { background: #ede0cf; border-radius: 14px; padding: 1rem; border: 1px solid #d4c4b0; min-height: 300px; }
+    .kanban-col-header { display: flex; align-items: center; gap: .6rem; margin-bottom: 1rem; }
+    .col-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    .col-dot.todo { background: #94a3b8; }
+    .col-dot.in-progress { background: #f59e0b; }
+    .col-dot.done { background: #22c55e; }
+    .col-title { font-weight: 700; font-size: .95rem; color: #2a2a2a; }
+    .col-count { margin-left: auto; background: #d4c4b0; color: #6b5a4e; font-size: .78rem; font-weight: 700; padding: .15rem .55rem; border-radius: 20px; }
+
+    .task-card { background: #fff; border: 1px solid #d4c4b0; border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: .75rem; box-shadow: 0 2px 8px rgba(0,0,0,.04); transition: .2s; }
+    .task-card:hover { box-shadow: 0 4px 16px rgba(122,0,0,.1); border-color: #c9a98a; transform: translateY(-1px); }
+    .task-card.done-card { opacity: .7; }
+    .task-card.done-card .task-name { text-decoration: line-through; color: #6b5a4e; }
+    .task-ministry-tag { display: inline-block; font-size: .72rem; font-weight: 700; padding: .18rem .6rem; border-radius: 20px; background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; margin-bottom: .55rem; text-transform: uppercase; letter-spacing: .04em; }
+    .task-name { font-size: .98rem; font-weight: 700; color: #2a2a2a; margin-bottom: .4rem; line-height: 1.3; }
+    .task-desc { font-size: .84rem; color: #6b5a4e; line-height: 1.4; margin-bottom: .7rem; }
+    .task-footer { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
+    .task-assignee { display: flex; align-items: center; gap: .4rem; font-size: .8rem; color: #6b5a4e; font-weight: 600; }
+    .assignee-avatar { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #7A0000, #8B4513); display: flex; align-items: center; justify-content: center; color: white; font-size: .65rem; font-weight: 700; flex-shrink: 0; }
+    .task-deadline { font-size: .78rem; color: #6b5a4e; font-weight: 600; display: flex; align-items: center; gap: .3rem; }
+    .task-deadline.overdue { color: #dc2626; }
+    .task-deadline svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .task-status-form { margin-top: .65rem; padding-top: .65rem; border-top: 1px solid #d4c4b0; display: flex; align-items: center; gap: .5rem; }
+    .status-select { flex: 1; padding: .35rem .6rem; border: 1px solid #d4c4b0; border-radius: 6px; font-size: .82rem; font-weight: 600; background: #f5e6d3; color: #2a2a2a; cursor: pointer; }
+    .status-select:focus { outline: 2px solid #DAA520; }
+
+    .col-empty { text-align: center; padding: 2rem 1rem; color: #b0967e; font-size: .88rem; }
+    .col-empty svg { width: 40px; height: 40px; stroke: #d4c4b0; fill: none; stroke-width: 1.5; margin-bottom: .5rem; display: block; margin-inline: auto; }
+
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 500; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; animation: fadeIn .2s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal { background: #fff; border-radius: 16px; padding: 2rem; width: 92%; max-width: 520px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,.25); animation: slideUp .25s ease; }
+    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal-title { font-size: 1.35rem; font-weight: 700; margin-bottom: 1.5rem; color: #2a2a2a; }
+    .modal-close { position: absolute; top: 1.2rem; right: 1.2rem; background: #f5e6d3; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; color: #6b5a4e; transition: .2s; }
+    .modal-close:hover { background: #d4c4b0; }
+    .form-group { margin-bottom: 1rem; }
+    .form-label { display: block; font-weight: 700; font-size: .88rem; color: #2a2a2a; margin-bottom: .4rem; }
+    .form-control { width: 100%; padding: .6rem .75rem; border: 1.5px solid #d4c4b0; border-radius: 8px; font-size: .92rem; color: #2a2a2a; background: #f5e6d3; transition: .2s; }
+    .form-control:focus { outline: none; border-color: #DAA520; background: #fff; }
+    textarea.form-control { resize: vertical; min-height: 80px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-actions { display: flex; gap: .75rem; justify-content: flex-end; margin-top: 1.5rem; }
+
+    @media (max-width: 900px) { .kanban { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) {
+        .event-hero-info h2 { font-size: 1.3rem; }
+        .event-hero-body { padding: 1rem; }
+        .form-row { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="event-hero">
+    <div class="event-hero-banner">
+        {% if event.image %}<img src="{{ event.image.url }}" alt="{{ event.name }}">{% endif %}
+        <div class="event-hero-info">
+            <div class="badge">Организационное мероприятие</div>
+            <h2>{{ event.name }}</h2>
+        </div>
+    </div>
+    <div class="event-hero-body">
+        <div>
+            <div class="event-meta">
+                {% if event.date %}
+                <div class="event-meta-item">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    {{ event.date|date:"d E Y" }}
+                </div>
+                {% endif %}
+                <div class="event-meta-item">
+                    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Задач: {{ tasks|length }}
+                </div>
+            </div>
+            {% if event.description %}<p class="event-description">{{ event.description }}</p>{% endif %}
+            {% if tasks %}
+            <div class="progress-wrap">
+                <div class="progress-label"><span>Прогресс выполнения</span><span id="progress-pct">—</span></div>
+                <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+            </div>
+            {% endif %}
+        </div>
+        {% if request.user.is_authenticated and request.user.is_minister or request.user.is_staff %}
+        <button class="btn gold" onclick="openModal('createTaskModal')">
+            <svg style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Создать задачу
+        </button>
+        {% endif %}
+        {% if request.user.is_authenticated and request.user.is_staff %}
+        <form method="post" action="{% url 'event_publish' event_organized_id=event.id %}">
+        {% csrf_token %}
+            <button type="submit">Опубликовать</button>
+         </form>
+        {% endif %}
+    </div>
+</div>
+
+<div class="tasks-header">
+    <h3>Задачи министерств</h3>
+    <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">Все</button>
+        {% for ministry in ministries %}
+        <button class="filter-btn" data-filter="{{ ministry.id }}">{{ ministry.name }}</button>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="kanban">
+
+    <div class="kanban-col" id="col-todo">
+        <div class="kanban-col-header">
+            <span class="col-dot todo"></span><span class="col-title">К выполнению</span><span class="col-count" id="cnt-todo">0</span>
+        </div>
+        {% for task in tasks %}{% if task.status == 'todo' %}
+        <div class="task-card" data-ministry="{{ task.ministry.id }}">
+            <span class="task-ministry-tag">{{ task.ministry.name }}</span>
+            <div class="task-name">{{ task.name }}</div>
+            <div class="task-desc">{{ task.description }}</div>
+            <div class="task-footer">
+                <div class="task-assignee">
+                    <div class="assignee-avatar">{{ task.assigned_to.username|slice:":1"|upper }}</div>
+                    {{ task.assigned_to.username }}
+                </div>
+                <div class="task-deadline {% if task.deadline < today %}overdue{% endif %}">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    {{ task.deadline|date:"d.m.Y" }}
+                </div>
+            </div>
+            {% if request.user.is_authenticated %}{% if request.user.is_minister or request.user.is_member %}
+            <div class="task-status-form">
+                <form method="post" action="{% url 'task_status_update' task.id %}" style="display:flex;gap:.5rem;width:100%">
+                    {% csrf_token %}
+                    <select name="status" class="status-select">
+                        <option value="todo" {% if task.status == 'todo' %}selected{% endif %}>К выполнению</option>
+                        <option value="in_progress" {% if task.status == 'in_progress' %}selected{% endif %}>В процессе</option>
+                        <option value="done" {% if task.status == 'done' %}selected{% endif %}>Выполнено</option>
+                    </select>
+                    <button type="submit" class="btn sm">✓</button>
+                </form>
+            </div>
+            {% endif %}{% endif %}
+        </div>
+        {% endif %}{% endfor %}
+        <div class="col-empty" id="empty-todo" style="display:none">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg><p>Нет задач</p>
+        </div>
+    </div>
+
+    <div class="kanban-col" id="col-inprogress">
+        <div class="kanban-col-header">
+            <span class="col-dot in-progress"></span><span class="col-title">В процессе</span><span class="col-count" id="cnt-inprogress">0</span>
+        </div>
+        {% for task in tasks %}{% if task.status == 'in_progress' %}
+        <div class="task-card" data-ministry="{{ task.ministry.id }}">
+            <span class="task-ministry-tag">{{ task.ministry.name }}</span>
+            <div class="task-name">{{ task.name }}</div>
+            <div class="task-desc">{{ task.description }}</div>
+            <div class="task-footer">
+                <div class="task-assignee">
+                    <div class="assignee-avatar">{{ task.assigned_to.username|slice:":1"|upper }}</div>
+                    {{ task.assigned_to.username }}
+                </div>
+                <div class="task-deadline {% if task.deadline < today %}overdue{% endif %}">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    {{ task.deadline|date:"d.m.Y" }}
+                </div>
+            </div>
+            {% if request.user.is_authenticated %}{% if request.user.is_minister or request.user.is_member %}
+            <div class="task-status-form">
+                <form method="post" action="{% url 'task_status_update' task.id %}" style="display:flex;gap:.5rem;width:100%">
+                    {% csrf_token %}
+                    <select name="status" class="status-select">
+                        <option value="todo" {% if task.status == 'todo' %}selected{% endif %}>К выполнению</option>
+                        <option value="in_progress" {% if task.status == 'in_progress' %}selected{% endif %}>В процессе</option>
+                        <option value="done" {% if task.status == 'done' %}selected{% endif %}>Выполнено</option>
+                    </select>
+                    <button type="submit" class="btn sm">✓</button>
+                </form>
+            </div>
+            {% endif %}{% endif %}
+        </div>
+        {% endif %}{% endfor %}
+        <div class="col-empty" id="empty-inprogress" style="display:none">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><p>Нет задач</p>
+        </div>
+    </div>
+
+    <div class="kanban-col" id="col-done">
+        <div class="kanban-col-header">
+            <span class="col-dot done"></span><span class="col-title">Выполнено</span><span class="col-count" id="cnt-done">0</span>
+        </div>
+        {% for task in tasks %}{% if task.status == 'done' %}
+        <div class="task-card done-card" data-ministry="{{ task.ministry.id }}">
+            <span class="task-ministry-tag">{{ task.ministry.name }}</span>
+            <div class="task-name">{{ task.name }}</div>
+            <div class="task-desc">{{ task.description }}</div>
+            <div class="task-footer">
+                <div class="task-assignee">
+                    <div class="assignee-avatar">{{ task.assigned_to.username|slice:":1"|upper }}</div>
+                    {{ task.assigned_to.username }}
+                </div>
+                <div class="task-deadline">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    {{ task.deadline|date:"d.m.Y" }}
+                </div>
+            </div>
+            {% if request.user.is_authenticated %}{% if request.user.is_minister or request.user.is_member %}
+            <div class="task-status-form">
+                <form method="post" action="{% url 'task_status_update' task.id %}" style="display:flex;gap:.5rem;width:100%">
+                    {% csrf_token %}
+                    <select name="status" class="status-select">
+                        <option value="todo" {% if task.status == 'todo' %}selected{% endif %}>К выполнению</option>
+                        <option value="in_progress" {% if task.status == 'in_progress' %}selected{% endif %}>В процессе</option>
+                        <option value="done" {% if task.status == 'done' %}selected{% endif %}>Выполнено</option>
+                    </select>
+                    <button type="submit" class="btn sm">✓</button>
+                </form>
+            </div>
+            {% endif %}{% endif %}
+        </div>
+        {% endif %}{% endfor %}
+        <div class="col-empty" id="empty-done" style="display:none">
+            <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg><p>Нет задач</p>
+        </div>
+    </div>
+
+</div>
+
+{% if request.user.is_authenticated and request.user.is_minister %}
+<div class="modal-overlay" id="createTaskModal">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('createTaskModal')">✕</button>
+        <div class="modal-title">Новая задача</div>
+        <form method="post" action="{% url 'event_to_organize_detail' event.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="event" value="{{ event.id }}">
+            <div class="form-group">
+                <label class="form-label">Название задачи *</label>
+                <input type="text" name="name" class="form-control" placeholder="Например: Оформить зал" required maxlength="150">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Описание *</label>
+                <textarea name="description" class="form-control" placeholder="Подробное описание..." required maxlength="250"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Министерство</label>
+                    <select name="ministry" class="form-control">
+                        {% for ministry in user_ministries %}
+                        <option value="{{ ministry.id }}">{{ ministry.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ответственный</label>
+                    <select name="assigned_to" class="form-control">
+                        {% for member in ministry_members %}
+                        <option value="{{ member.id }}">{{ member.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Дедлайн *</label>
+                <input type="date" name="deadline" class="form-control" required>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn secondary" onclick="closeModal('createTaskModal')">Отмена</button>
+                <button type="submit" class="btn gold">Создать задачу</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+    function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = ''; }
+    document.querySelectorAll('.modal-overlay').forEach(el => {
+        el.addEventListener('click', e => { if (e.target === el) closeModal(el.id); });
+    });
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id));
+    });
+
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const filter = btn.dataset.filter;
+            document.querySelectorAll('.task-card').forEach(card => {
+                card.style.display = (filter === 'all' || card.dataset.ministry === filter) ? '' : 'none';
+            });
+            updateCounts();
+        });
+    });
+
+    function updateCounts() {
+        ['todo', 'inprogress', 'done'].forEach(key => {
+            const col = document.getElementById(key === 'inprogress' ? 'col-inprogress' : `col-${key}`);
+            const visible = col.querySelectorAll('.task-card:not([style*="display: none"])').length;
+            document.getElementById(`cnt-${key}`).textContent = visible;
+            const emptyEl = document.getElementById(`empty-${key}`);
+            if (emptyEl) emptyEl.style.display = visible === 0 ? 'block' : 'none';
+        });
+        const all = document.querySelectorAll('.task-card:not([style*="display: none"])');
+        const done = document.querySelectorAll('#col-done .task-card:not([style*="display: none"])');
+        const pct = all.length > 0 ? Math.round((done.length / all.length) * 100) : 0;
+        const fill = document.getElementById('progress-fill');
+        const pctEl = document.getElementById('progress-pct');
+        if (fill) fill.style.width = pct + '%';
+        if (pctEl) pctEl.textContent = pct + '%';
+    }
+
+    window.addEventListener('DOMContentLoaded', updateCounts);
+</script>
+{% endblock %}

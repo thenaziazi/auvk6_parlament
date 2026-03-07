@@ -1,0 +1,27 @@
+{% extends "base_parlament.html" %}
+{% block title %}План года{% endblock %}
+{% block content %}
+<h2>План года</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Мероприятие</th>
+            <th>Описание</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events %}
+        <tr>
+            <td>{{ event.date|date:"d.m.Y"|default:"уточняется" }}</td>
+            <td><a href="{% url 'event_detail_public' event.id %}">{{ event.name }}</a></td>
+            <td>{{ event.description }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">План пока не заполнен.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base_parlament.html" %}
+{% block title %}Архив мероприятий{% endblock %}
+{% block content %}
+<h2>Архив мероприятий</h2>
+<div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));">
+    {% for event in events %}
+    <article class="card">
+        <h3>{{ event.name }}</h3>
+        <p>{{ event.description }}</p>
+        <p><strong>Дата:</strong> {{ event.date|date:"d.m.Y"|default:"уточняется" }}</p>
+        <p><a href="{% url 'archive_detail' event.id %}">Открыть</a></p>
+    </article>
+    {% empty %}
+    <p>Архив пока пуст.</p>
+    {% endfor %}
+</div>
+{% endblock %}

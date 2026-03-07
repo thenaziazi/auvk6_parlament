@@ -1,0 +1,74 @@
+{% extends "base_parlament.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .section-title { font-size: 1.8rem; color: #2a2a2a; margin-bottom: 1.8rem; font-weight: 700; }
+    .section-title span { color: #7A0000; }
+
+    .events-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.8rem;
+        margin-bottom: 3rem;
+    }
+
+    .event-card {
+        background: #fff;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(122,0,0,0.08);
+        border: 1px solid #e6d4bd;
+        transition: transform .3s, box-shadow .3s;
+        cursor: pointer;
+    }
+    .event-card:hover { transform: translateY(-5px); box-shadow: 0 10px 32px rgba(122,0,0,0.16); border-color: #7A0000; }
+
+    .event-image {
+        width: 100%; height: 210px;
+        background: linear-gradient(135deg, #7A0000 0%, #a84000 100%);
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-size: 3rem;
+        position: relative; overflow: hidden;
+    }
+    .event-image img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+
+    .event-content { padding: 1.3rem; }
+    .event-date { color: #7A0000; font-size: .85rem; font-weight: 600; margin-bottom: .4rem; text-transform: uppercase; letter-spacing: .04em; }
+    .event-title { font-size: 1.15rem; font-weight: 700; margin-bottom: .4rem; color: #1a1a1a; }
+    .event-description { color: #555; font-size: .92rem; line-height: 1.5; }
+
+    @media (max-width: 600px) {
+        .events-grid { grid-template-columns: 1fr; }
+        .section-title { font-size: 1.4rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section>
+    <h2 class="section-title">Наши <span>Мероприятия</span></h2>
+    <div class="events-grid">
+        {% for event in events %}
+        <div class="event-card" onclick="location.href='{% url 'event_detail_public' event.id %}'">
+            <div class="event-image">
+                {% if event.image %}
+                    <img src="{{ event.image.url }}" alt="{{ event.name }}">
+                {% else %}
+                    📅
+                {% endif %}
+            </div>
+            <div class="event-content">
+                <div class="event-date">
+                    {% if event.date %}{{ event.date|date:"d E Y" }}{% else %}Дата уточняется{% endif %}
+                </div>
+                <h3 class="event-title">{{ event.name }}</h3>
+                <p class="event-description">{{ event.description }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <p style="color:#666; grid-column: 1/-1;">Мероприятий пока нет.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

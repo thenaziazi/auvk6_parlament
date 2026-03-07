@@ -1,0 +1,12 @@
+{% extends "base_parlament.html" %}
+{% block title %}{{ event.name }}{% endblock %}
+{% block content %}
+<article class="card">
+    <h2>{{ event.name }}</h2>
+    <p><strong>Дата:</strong> {{ event.date|date:"d.m.Y"|default:"уточняется" }}</p>
+    <p>{{ event.description }}</p>
+    {% if event.image %}
+        <img src="{{ event.image.url }}" alt="{{ event.name }}" style="max-width: 100%; border-radius: 8px; margin-top: .8rem;">
+    {% endif %}
+</article>
+{% endblock %}

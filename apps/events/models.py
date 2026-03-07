@@ -1,0 +1,39 @@
+from django.db import models
+
+
+class EventBase(models.Model):
+    date = models.DateField(blank=True,null=True)
+    name = models.CharField(max_length=50)
+    description = models.TextField(blank=True,max_length=1000)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+
+class Events(EventBase):
+    image = models.ImageField(upload_to='images',blank=False,null=True)
+
+
+    def __str__(self):
+        return self.name 
+    
+    class Meta:
+        verbose_name = "Мероприятие"
+        verbose_name_plural = "Мероприятия"
+        ordering = ['-created_at']
+
+
+class EventsToOrganize(EventBase):
+    image = models.ImageField(upload_to='images',blank=True,null=True)
+    
+
+
+    def __str__(self):
+
+        return self.name 
+    
+    class Meta:
+        verbose_name = "Мероприятие для организации"
+        verbose_name_plural = "Мероприятия для организации"
+        ordering = ['-created_at']

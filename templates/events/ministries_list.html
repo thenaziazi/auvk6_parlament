@@ -1,0 +1,18 @@
+{% extends "base_parlament.html" %}
+{% block title %}Министерства{% endblock %}
+{% block content %}
+<h2>Министерства</h2>
+<div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));">
+    {% for ministry in ministries %}
+    <article class="card">
+        <h3>{{ ministry.name }}</h3>
+        <p>{{ ministry.description }}</p>
+        {% if ministry.image %}
+            <img src="{{ ministry.image.url }}" alt="{{ ministry.name }}" style="max-width: 100%; border-radius: 8px; margin-top: .8rem;">
+        {% endif %}
+    </article>
+    {% empty %}
+    <p>Список министерств пока пуст.</p>
+    {% endfor %}
+</div>
+{% endblock %}
