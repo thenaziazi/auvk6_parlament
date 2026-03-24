@@ -1,0 +1,326 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{% block title %}Школьный парламент{% endblock %}</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: #f8f5ef;
+        color: #2a2a2a;
+        line-height: 1.6;
+      }
+
+      header {
+        background: linear-gradient(120deg, #7a0000, #b47a1a);
+        color: white;
+        padding: 18px 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .wrap {
+        max-width: 1200px;
+        margin: auto;
+        padding: 0 20px;
+      }
+
+      .header-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .logo {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid #f5c86b;
+      }
+
+      .logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .logo-section h1 {
+        font-size: 1.3rem;
+        font-weight: 600;
+      }
+
+      .auth {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .auth span {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .btn {
+        padding: 7px 14px;
+        border-radius: 8px;
+        border: none;
+        background: #7a0000;
+        color: white;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.25s;
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        background: #5e0000;
+        transform: translateY(-1px);
+      }
+
+      .btn.secondary {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .btn.secondary:hover {
+        background: rgba(255, 255, 255, 0.35);
+      }
+
+      nav {
+        background: white;
+        border-bottom: 1px solid #e6e0d5;
+        position: sticky;
+        top: 84px;
+        z-index: 99;
+      }
+
+      .nav-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .nav-menu {
+        display: flex;
+        list-style: none;
+        gap: 6px;
+      }
+
+      .nav-menu a {
+        display: block;
+        padding: 14px 16px;
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: 0.25s;
+      }
+
+      .nav-menu a:hover {
+        background: #f3ede4;
+        color: #7a0000;
+      }
+
+      .nav-menu a.active {
+        background: #f3ede4;
+        color: #7a0000;
+        font-weight: 600;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 8px;
+      }
+
+      .social-links a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #faf7f1;
+        border: 1px solid #e6e0d5;
+        color: #7a0000;
+        transition: 0.25s;
+      }
+
+      .social-links a:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .main {
+        padding: 40px 0;
+      }
+
+      .card {
+        background: white;
+        border-radius: 14px;
+        padding: 24px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+        border: 1px solid #efe7db;
+      }
+
+      .messages {
+        margin-bottom: 15px;
+      }
+
+      .message {
+        background: #fff8e8;
+        border-left: 4px solid #d89c1d;
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      th {
+        background: #f5efe6;
+        color: #7a0000;
+        font-weight: 600;
+      }
+
+      th,
+      td {
+        padding: 12px 14px;
+        border-bottom: 1px solid #eee;
+      }
+
+      tbody tr:hover {
+        background: #faf7f1;
+      }
+
+      footer {
+        background: linear-gradient(120deg, #7a0000, #8b4513);
+        color: white;
+        text-align: center;
+        padding: 18px;
+        margin-top: 40px;
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+        .header-line {
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        nav {
+          top: 110px;
+        }
+
+        .nav-line {
+          flex-direction: column;
+        }
+
+        .nav-menu {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .social-links {
+          margin-top: 8px;
+        }
+      }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+  </head>
+
+  <body>
+    <header>
+      <div class="wrap header-line">
+        <div class="logo-section">
+          <div class="logo">
+            <img src="{% static 'logo.jpg' %}" />
+          </div>
+          <h1>Школьный Парламент АУВК ШГ №6</h1>
+        </div>
+
+        <div class="auth">
+          {% if request.user.is_authenticated %}
+
+          <span>{{ request.user.username }}</span>
+          <a class="btn secondary" href="{% url 'logout' %}">Выйти</a>
+
+          {% else %}
+
+          <a class="btn secondary" href="{% url 'login' %}">Войти</a>
+
+          {% endif %}
+        </div>
+      </div>
+    </header>
+
+    <nav>
+      <div class="wrap nav-line">
+        <ul class="nav-menu">
+          <li><a href="{% url 'index' %}">Главная</a></li>
+
+          <li><a href="{% url 'events_list_public' %}">Мероприятия</a></li>
+
+          <li><a href="{% url 'ministries_list' %}">Министерства</a></li>
+
+          <li><a href="{% url 'year_plan' %}">План года</a></li>
+
+          <li><a href="{% url 'archive_list' %}">Архив</a></li>
+
+          {% if request.user.is_authenticated and request.user.is_minister %}
+          <li><a href="{% url 'eventslist_view' %}">Создать задачу</a></li>
+          {% endif %} 
+          {% if request.user.is_authenticated and request.user.is_member %}
+          <li><a href="{% url 'eventslist_view' %}">Поручения</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
+    <main class="main">
+      <div class="wrap">
+        {% if messages %}
+        <div class="messages">
+          {% for message in messages %}
+          <div class="message">{{ message }}</div>
+          {% endfor %}
+        </div>
+        {% endif %} {% block content %}{% endblock %}
+      </div>
+    </main>
+
+    <footer>© 2026 АУВК ШГ №6 — Школьный парламент 🇰🇬</footer>
+
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

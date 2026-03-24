@@ -11,4 +11,5 @@ urlpatterns = [
     path("archive/<int:event_id>/", views.archive_detail, name="archive_detail"),
     path("plan/", views.year_plan, name="year_plan"),
     path("ministries/", views.ministries_list, name="ministries_list"),
+    path("ministries/<int:ministry_id>/", views.ministry_detail, name="ministry_detail"),
 ]

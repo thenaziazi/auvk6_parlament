@@ -1,18 +1,207 @@
 {% extends "base_parlament.html" %}
-{% block title %}Министерства{% endblock %}
+{% load static %}
+
+{% block title %}Министерства — Школьный Парламент{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ── Page header ── */
+    .page-header {
+        margin-bottom: 2.5rem;
+    }
+    .page-header h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2a2a2a;
+    }
+    .page-header h2 span { color: #7A0000; }
+    .page-subtitle {
+        color: #7a6355;
+        font-size: .97rem;
+        margin-top: .3rem;
+    }
+
+    /* ── Ministry cards list (single column) ── */
+    .ministries-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+        margin-bottom: 3rem;
+    }
+
+    .ministry-card {
+    display: flex;
+    align-items: stretch;
+    background: #efe7dc;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e0d0bc;
+    box-shadow: 0 4px 16px rgba(122,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s, transform 0.2s;
+    max-width: 900px;
+    }
+    .ministry-card:hover {
+        box-shadow: 0 8px 24px rgba(122,0,0,0.11), 0 2px 6px rgba(0,0,0,0.06);
+        transform: translateY(-2px);
+    }
+
+    .ministry-name {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #1a0a00;
+        margin-bottom: .35rem;
+    }
+    .ministry-body {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    gap: 5px;
+    overflow: hidden;
+    }
+
+    .ministry-description {
+        font-size: .93rem;
+        color: #6b4f3a;
+        line-height: 1.6;
+        margin-bottom: 1.1rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* thin divider */
+    .ministry-divider {
+        border: none;
+        border-top: 1px solid #e6d4bd;
+        margin-bottom: 1rem;
+    }
+
+    /* goals link — same style as back-link / "Все мероприятия" */
+    .ministry-goals-link {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        color: #7A0000;
+        font-weight: 700;
+        font-size: .9rem;
+        text-decoration: none;
+        transition: gap .22s ease;
+    }
+    .ministry-goals-link:hover { gap: .85rem; }
+    .ministry-goals-link .arrow {
+        display: inline-block;
+        transition: transform .22s ease;
+        font-size: 1rem;
+    }
+    .ministry-goals-link:hover .arrow { transform: translateX(4px); }
+
+    /* ── Bottom CTA buttons ── */
+    .cta-section {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e0cfbb;
+    }
+
+    .cta-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .6rem;
+        padding: .85rem 1.6rem;
+        border-radius: 12px;
+        font-size: .95rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform .25s ease, box-shadow .25s ease;
+        cursor: pointer;
+    }
+    .cta-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 24px rgba(0,0,0,.13);
+    }
+    .cta-btn svg {
+        width: 18px; height: 18px;
+        flex-shrink: 0;
+    }
+
+    /* Primary — join parliament */
+    .cta-btn.primary {
+        background: linear-gradient(135deg, #7A0000, #a84000);
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(122,0,0,.25);
+    }
+    .cta-btn.primary:hover {
+        box-shadow: 0 12px 28px rgba(122,0,0,.35);
+    }
+
+    /* Secondary — suggest */
+    .cta-btn.secondary {
+        background: #fdf8f2;
+        color: #7A0000;
+        border: 1.5px solid #d4a96a;
+        box-shadow: 0 4px 14px rgba(122,0,0,.07);
+    }
+    .cta-btn.secondary:hover {
+        box-shadow: 0 10px 24px rgba(122,0,0,.14);
+        background: #fff;
+    }
+
+    @media (max-width: 600px) {
+        .cta-section { flex-direction: column; }
+        .cta-btn { width: 100%; justify-content: center; }
+        .ministry-card { padding: 1.2rem 1.3rem; }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<h2>Министерства</h2>
-<div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));">
+
+<div class="page-header">
+    <h2>Наши <span>Министерства</span></h2>
+    <p class="page-subtitle">Каждое министерство отвечает за свою сферу жизни школы</p>
+</div>
+
+<!-- Ministry cards — single column list -->
+<div class="ministries-list">
     {% for ministry in ministries %}
-    <article class="card">
-        <h3>{{ ministry.name }}</h3>
-        <p>{{ ministry.description }}</p>
-        {% if ministry.image %}
-            <img src="{{ ministry.image.url }}" alt="{{ ministry.name }}" style="max-width: 100%; border-radius: 8px; margin-top: .8rem;">
-        {% endif %}
-    </article>
-    {% empty %}
-    <p>Список министерств пока пуст.</p>
+<div class="ministry-card">        {# ← эта строка пропала #}
+    <div class="ministry-body">
+        <div class="ministry-name">{{ ministry.name }}</div>
+        <div class="ministry-description">{{ ministry.description }}</div>
+        <hr class="ministry-divider">
+        <a href="{% url 'ministry_detail' ministry.pk %}" class="ministry-goals-link">
+            Цели министерства <span class="arrow">→</span>
+        </a>
+    </div>
+</div>                             {# ← и эта #}
+{% empty %}
+    <p style="color:#999;">Министерства пока не добавлены.</p>
     {% endfor %}
 </div>
+
+<!-- CTA buttons -->
+<div class="cta-section">
+    <a href="https://forms.google.com/YOUR_FORM_LINK" target="_blank" rel="noopener noreferrer" class="cta-btn primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        Присоединиться к парламенту
+    </a>
+
+    <a href="https://t.me/YOUR_BOT" target="_blank" rel="noopener noreferrer" class="cta-btn secondary">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21.8 4.3L3.8 11.3a1 1 0 0 0 .1 1.9l4.6 1.4 1.8 5.4a1 1 0 0 0 1.6.4l2.7-2.5 4.7 3.5a1 1 0 0 0 1.6-.6l3.2-14.5a1 1 0 0 0-1.3-1.9zM9.1 13.9l8.2-6.1-6.4 7.4-.2 2.9-1.2-3.4-2.7-.8z"/>
+        </svg>
+        Оставить предложение
+    </a>
+</div>
+
 {% endblock %}

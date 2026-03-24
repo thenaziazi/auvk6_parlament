@@ -1,0 +1,123 @@
+Ministry detail · HTML
+Copy
+
+{% extends "base_parlament.html" %}
+{% load static %}
+ 
+{% block title %}{{ ministry.name }} — Школьный Парламент{% endblock %}
+ 
+{% block extra_css %}
+<style>
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        text-decoration: none;
+        color: #7A0000;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 1.8rem;
+        transition: gap .2s;
+    }
+    .back-link:hover { gap: .8rem; }
+ 
+    .ministry-header {
+        margin-bottom: 2.5rem;
+    }
+    .ministry-header h1 {
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: #2a2a2a;
+        line-height: 1.2;
+        margin-bottom: .6rem;
+    }
+    .ministry-desc {
+    border-left: 3px solid #7A0000;
+    padding-left: 1rem;
+    font-size: 1.08rem
+    }
+    .ministry-description {
+    font-size: 1.05rem;
+    font-weight: 400;  
+    }
+ 
+    .section-divider {
+        border: none;
+        border-top: 1px solid #d4c4b0;
+        margin: 2rem 0;
+    }
+    .goals-list {
+    counter-reset: goal-counter;
+    }
+
+    .goal-item {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;  /* number | text | status */
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e6d4bd;
+    gap: 0 1rem;
+    }
+    .goal-item:last-child { border-bottom: none; }
+
+    .goal-item::before {
+        content: counter(goal-counter) ".";
+        color: #7A0000;
+        font-weight: 800;
+        font-size: 1rem;
+        align-self: start;
+        padding-top: .15rem;
+    }
+
+ 
+    /* empty state */
+    .no-goals {
+        color: #bbb;
+        font-size: .95rem;
+        padding: 1rem 0;
+    }
+</style>
+{% endblock %}
+ 
+{% block content %}
+ 
+<a href="{% url 'ministries_list' %}" class="back-link">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+    </svg>
+    Все министерства
+</a>
+ 
+<!-- Ministry name + description, plain on beige -->
+<div class="ministry-header">
+    <h1>{{ ministry.name }}</h1>
+    <hr class="section-divider">          
+    <p class="ministry-desc">{{ ministry.description }}</p>
+</div>
+ 
+<hr class="section-divider">
+
+
+<div class="goals-list">
+    {% for goal in goals %}
+    <div class="goal-item">
+        <div class="goal-left">
+            <div class="goal-name">{{ goal.name }}</div>
+            <div class="goal-description">{{ goal.description }}</div>
+        </div>
+        <div class="goal-status
+            {% if goal.status == 'todo' %}status-todo
+            {% elif goal.status == 'in_progress' %}status-inprogress
+            {% else %}status-done{% endif %}">
+            {% if goal.status == 'todo' %}В планах
+            {% elif goal.status == 'in_progress' %}В процессе
+            {% else %}Выполнено{% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <p class="no-goals">Цели пока не добавлены.</p>
+    {% endfor %}
+</div>
+ 
+{% endblock %}

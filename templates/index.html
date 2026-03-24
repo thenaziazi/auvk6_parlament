@@ -14,7 +14,7 @@
     }
 
     .event-card {
-        background: #fff;
+        background: #efe7dc;
         border-radius: 14px;
         overflow: hidden;
         box-shadow: 0 4px 20px rgba(122,0,0,0.08);
@@ -36,7 +36,14 @@
     .event-content { padding: 1.3rem; }
     .event-date { color: #7A0000; font-size: .85rem; font-weight: 600; margin-bottom: .4rem; text-transform: uppercase; letter-spacing: .04em; }
     .event-title { font-size: 1.15rem; font-weight: 700; margin-bottom: .4rem; color: #1a1a1a; }
-    .event-description { color: #555; font-size: .92rem; line-height: 1.5; }
+    .event-description { color: #555;
+        font-size: .92rem; 
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden; 
+    }
 
     @media (max-width: 600px) {
         .events-grid { grid-template-columns: 1fr; }

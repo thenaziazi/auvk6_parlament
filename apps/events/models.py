@@ -23,6 +23,14 @@ class Events(EventBase):
         verbose_name_plural = "Мероприятия"
         ordering = ['-created_at']
 
+    
+class EventPhoto(models.Model):
+    event = models.ForeignKey(Events, on_delete=models.CASCADE,related_name='images')
+    image = models.ImageField(upload_to='images')
+
+    def __str__(self):
+        return self.event.name
+
 
 class EventsToOrganize(EventBase):
     image = models.ImageField(upload_to='images',blank=True,null=True)
@@ -30,10 +38,24 @@ class EventsToOrganize(EventBase):
 
 
     def __str__(self):
-
         return self.name 
     
     class Meta:
         verbose_name = "Мероприятие для организации"
         verbose_name_plural = "Мероприятия для организации"
         ordering = ['-created_at']
+
+
+class YearPlan(models.Model):
+    name = models.CharField(max_length=30,blank=False)
+    description = models.TextField(blank=False)
+    date = models.DateField(blank=False)
+
+    class Meta:
+        verbose_name = 'План года'
+        verbose_name_plural = 'План года'
+
+    def __str__(self):
+        return self.name
+
+
