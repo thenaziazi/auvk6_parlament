@@ -50,6 +50,7 @@ class YearPlan(models.Model):
     name = models.CharField(max_length=30,blank=False)
     description = models.TextField(blank=False)
     date = models.DateField(blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'План года'

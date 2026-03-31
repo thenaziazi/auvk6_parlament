@@ -1,7 +1,7 @@
 from datetime import date
 from django.shortcuts import get_object_or_404,render
 
-from apps.events.models import Events, EventsToOrganize
+from apps.events.models import Events, EventsToOrganize, YearPlan
 from apps.ministries.models import Ministries,MinistryGoals
 from apps.users.models import CustomUser
 
@@ -33,7 +33,7 @@ def archive_detail(request, event_id):
 
 
 def year_plan(request):
-    events = EventsToOrganize.objects.all().order_by("date", "-created_at")
+    events = YearPlan.objects.all().order_by("date", "-created_at")
     return render(request, "events/year_plan.html", {"events": events})
 
 

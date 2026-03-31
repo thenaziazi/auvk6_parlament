@@ -141,6 +141,11 @@
                 Создать задачу
             </button>
             {% endif %}
+            {% if form_errors %}
+            <div style="color:#dc2626; background:#fef2f2; padding:.75rem 1rem; border-radius:8px; font-size:.88rem; margin-bottom:1rem;">
+                {{ form_errors }}
+            </div>
+            {% endif %}
             {% if request.user.is_authenticated and request.user.is_staff %}
             <form method="post" action="{% url 'event_publish' event_organized_id=event.id %}" style="margin:0">
                 {% csrf_token %}
@@ -377,5 +382,10 @@
     }
 
     window.addEventListener('DOMContentLoaded', updateCounts);
+
+    {% if form_errors %}
+    openModal('createTaskModal');
+    {% endif %}
+
 </script>
 {% endblock %}

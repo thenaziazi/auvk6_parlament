@@ -46,31 +46,92 @@ Copy
         border-top: 1px solid #d4c4b0;
         margin: 2rem 0;
     }
-    .goals-list {
-    counter-reset: goal-counter;
-    }
+    
+    .goals-section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2a2a2a;
+    margin-bottom: 1.2rem;
+}
+.goals-section-title span { color: #7A0000; }
 
-    .goal-item {
+.goals-list {
+    display: flex;
+    flex-direction: column;
+    counter-reset: goal-counter;
+}
+
+.goal-item {
     display: grid;
-    grid-template-columns: 32px 1fr auto;  /* number | text | status */
+    grid-template-columns: 52px 1fr auto;
     align-items: center;
-    padding: 1rem 0;
+    padding: 1.1rem 0;
     border-bottom: 1px solid #e6d4bd;
     gap: 0 1rem;
-    }
-    .goal-item:last-child { border-bottom: none; }
+}
+.goal-item:last-child { border-bottom: none; }
 
-    .goal-item::before {
-        content: counter(goal-counter) ".";
-        color: #7A0000;
-        font-weight: 800;
-        font-size: 1rem;
-        align-self: start;
-        padding-top: .15rem;
-    }
+.goal-number {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #7A0000;
+    letter-spacing: -.02em;
+}
+
+.goal-left {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+}
+.goal-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a0a00;
+}
+.goal-description {
+    font-size: .88rem;
+    color: #6b4f3a;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* Status badges — pill style like screenshot */
+.goal-status {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: .82rem;
+    font-weight: 700;
+    padding: .45rem 1rem;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.status-icon { font-size: .9rem; }
+.status::before{
+    content:"";
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    display:inline-block;
+    margin-right:6px;
+    background:currentColor;
+}
+
+.goal-status.status-todo {
+    background: #d9e4ec;
+    color: #3b5f7a;
+}
+.goal-status.status-inprogress {
+    background: #f3dfc7;
+    color: #9a5a1a;
+}
+.goal-status.status-done {
+    background: #dbe7d3;
+    color: #3f6b3f;
+}
 
  
-    /* empty state */
     .no-goals {
         color: #bbb;
         font-size: .95rem;
@@ -89,7 +150,6 @@ Copy
     Все министерства
 </a>
  
-<!-- Ministry name + description, plain on beige -->
 <div class="ministry-header">
     <h1>{{ ministry.name }}</h1>
     <hr class="section-divider">          
@@ -98,10 +158,12 @@ Copy
  
 <hr class="section-divider">
 
+<div class="goals-section-title">Цели <span>министерства</span></div>
 
 <div class="goals-list">
     {% for goal in goals %}
     <div class="goal-item">
+        <div class="goal-number">{{ forloop.counter|stringformat:"02d" }}</div>
         <div class="goal-left">
             <div class="goal-name">{{ goal.name }}</div>
             <div class="goal-description">{{ goal.description }}</div>
@@ -110,9 +172,13 @@ Copy
             {% if goal.status == 'todo' %}status-todo
             {% elif goal.status == 'in_progress' %}status-inprogress
             {% else %}status-done{% endif %}">
-            {% if goal.status == 'todo' %}В планах
-            {% elif goal.status == 'in_progress' %}В процессе
-            {% else %}Выполнено{% endif %}
+            {% if goal.status == 'todo' %}
+                <span class="status-icon">○</span> В планах
+            {% elif goal.status == 'in_progress' %}
+                <span class="status-icon">◎</span> В процессе
+            {% else %}
+                <span class="status-icon">✓</span> Выполнено
+            {% endif %}
         </div>
     </div>
     {% empty %}

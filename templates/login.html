@@ -9,12 +9,17 @@
         padding: 1rem 0;
     }
     .auth-box {
-        background: #fff;
+        background: #efe7dc;
         border: 1px solid #e6d4bd;
         border-radius: 16px;
         box-shadow: 0 8px 32px rgba(122,0,0,0.1);
         width: 100%; max-width: 480px;
         overflow: hidden;
+    }
+    .auth-panel { 
+    display: none; 
+    padding: 2rem;
+    background: #efe7dc;  /* add this */
     }
     .auth-tabs {
         display: flex;
@@ -30,7 +35,19 @@
         margin-bottom: -2px;
         transition: color .2s, border-color .2s;
     }
-    .auth-tab.active { color: #7A0000; border-bottom-color: #7A0000; background: #fff; }
+    /* Active tab - beige instead of white */
+    .auth-tab.active { 
+        color: #7A0000; 
+        border-bottom-color: #7A0000; 
+        background: #efe7dc;  /* match the card background */
+    }
+
+    /* Also make the inactive tab background match */
+    .auth-tabs {
+        display: flex;
+        border-bottom: 2px solid #e6d4bd;
+        background: #e8ddd0;  /* slightly darker beige for contrast */
+}
 
     .auth-panel { display: none; padding: 2rem; }
     .auth-panel.active { display: block; }
@@ -48,16 +65,76 @@
 
     .auth-submit {
         width: 100%; padding: .75rem;
-        background: linear-gradient(90deg, #7A0000, #8B4513);
+        background: linear-gradient(90deg, #8B0000, #A0522D);
         color: white; border: none; border-radius: 8px;
         font-size: 1rem; font-weight: 600; cursor: pointer;
         transition: opacity .2s; margin-top: .5rem;
     }
-    .auth-submit:hover { opacity: .88; }
+    .auth-submit:hover { opacity: .88;
+    background: linear-gradient(90deg, #7A0000, #8B3A1A); 
+    }
+
+
 
     .auth-hint { text-align: center; margin-top: 1rem; font-size: .88rem; color: #777; }
     .auth-hint a { color: #7A0000; font-weight: 600; text-decoration: none; }
     .auth-hint a:hover { text-decoration: underline; }
+    .field-group {
+    margin-bottom: 1rem;
+}
+    .field-group label {
+        display: block;
+        font-size: .85rem;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: .3rem;
+    }
+    .field-group input {
+        width: 100%;
+        padding: .6rem .75rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: .95rem;
+        background: #fff;
+        box-sizing: border-box;
+    }
+    .field-group input:focus {
+        outline: none;
+        border-color: #7A0000;
+        box-shadow: 0 0 0 3px rgba(122,0,0,0.08);
+    }
+    .field-error {
+        display: block;
+        font-size: .8rem;
+        color: #c0392b;
+        margin-top: .25rem;
+    }
+    .field-group input {
+    width: 100%;
+    padding: .6rem .75rem;
+    border: 1px solid #d4c4b0;  /* warmer border */
+    border-radius: 8px;
+    font-size: .95rem;
+    background: #f5efe6;        /* beige background */
+    color: #1a1a1a;
+    box-sizing: border-box;
+    transition: border-color .2s, box-shadow .2s;
+    }
+
+    .field-group input:focus {
+        outline: none;
+        border-color: #7A0000;
+        background: #fdf8f2;        /* slightly lighter on focus */
+        box-shadow: 0 0 0 3px rgba(122,0,0,0.08);
+    }
+
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0px 1000px #f5efe6 inset !important;
+        -webkit-text-fill-color: #1a1a1a !important;
+        border-color: #d4c4b0 !important;
+}
+    
 </style>
 {% endblock %}
 
@@ -71,26 +148,29 @@
 
         <!-- Вход -->
         <div id="panel-login" class="auth-panel {% if not show_register %}active{% endif %}">
-            <h2>Добро пожаловать 👋</h2>
             <form method="post" action="{% url 'login' %}">
                 {% csrf_token %}
                 {{ login_form.as_p }}
                 <button class="auth-submit" type="submit">Войти</button>
             </form>
-            <p class="auth-hint">Нет аккаунта? <a href="#" onclick="switchTab('register'); return false;">Зарегистрироваться</a></p>
         </div>
 
-        <!-- Регистрация -->
-        <div id="panel-register" class="auth-panel {% if show_register %}active{% endif %}">
-            <h2>Создать аккаунт</h2>
-            <form method="post" action="{% url 'register' %}">
-                {% csrf_token %}
-                {{ register_form.as_p }}
-                <button class="auth-submit" type="submit">Зарегистрироваться</button>
-            </form>
-            <p class="auth-hint">Уже есть аккаунт? <a href="#" onclick="switchTab('login'); return false;">Войти</a></p>
+<!-- Регистрация -->
+<div id="panel-register" class="auth-panel {% if show_register %}active{% endif %}">
+    <h2>Создать аккаунт</h2>
+    <form method="post" action="{% url 'register' %}">
+        {% csrf_token %}
+        {% for field in register_form %}
+        <div class="field-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+                <span class="field-error">{{ field.errors|join:", " }}</span>
+            {% endif %}
         </div>
-    </div>
+        {% endfor %}
+        <button class="auth-submit" type="submit">Зарегистрироваться</button>
+    </form>
 </div>
 {% endblock %}
 
