@@ -9,7 +9,7 @@ class Tasks(models.Model):
 
     name = models.TextField(max_length=150, blank=False)
     description = models.TextField(max_length=250, blank=False)
-    assigned_to = models.ForeignKey(CustomUser, models.DO_NOTHING)
+    assigned_to = models.ForeignKey(CustomUser, models.SET_NULL, null=True)
     ministry = models.ForeignKey(
         Ministries,
         on_delete=models.CASCADE,

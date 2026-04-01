@@ -108,7 +108,7 @@ class EventDoneView(View):
     def post(self, request,event_organized_id):
         event_organized = get_object_or_404(EventsToOrganize,id=event_organized_id)
         if not event_organized.image:
-            messages.error('Вставь картинку к мероприятию')
+            messages.error(request,'Вставь картинку к мероприятию')
             return redirect('event_detail_public',event_organized_id=event_organized_id)
         new_public_event = Events.objects.create(
             name=event_organized.name,

@@ -1,5 +1,5 @@
 from django.urls import path,include
-from apps.tasks.views import *
+from apps.tasks.views import EventDetailView, EventDoneView, EventsListView, TaskEditView, TaskStatusUpdateView
 
 urlpatterns = [
     path("events_list/view",EventsListView.as_view(),name="eventslist_view"),
