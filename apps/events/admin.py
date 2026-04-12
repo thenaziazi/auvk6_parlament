@@ -1,9 +1,13 @@
 from django.contrib import admin
-from apps.events.models import Events, EventsToOrganize, EventPhoto, YearPlan
+from apps.events.models import Events, EventsToOrganize, EventPhoto, YearPlan, EventVideo
 
 class EventPhotoInline(admin.TabularInline):
     model = EventPhoto
     extra = 6    
+
+class EventVideoInline(admin.TabularInline):
+    model = EventVideo
+    extra = 6
 
 @admin.register(Events)
 class EventsAdmin(admin.ModelAdmin):
@@ -12,7 +16,7 @@ class EventsAdmin(admin.ModelAdmin):
         list_filter = ('id','name','date')
         list_display_links = ('id', 'name',)
         ordering = ('id',)
-        inlines = [EventPhotoInline]
+        inlines = [EventPhotoInline, EventVideoInline]
 
         fieldsets = (
         ('Название мероприятия', {

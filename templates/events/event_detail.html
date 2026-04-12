@@ -141,6 +141,11 @@
                 Создать задачу
             </button>
             {% endif %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
             {% if form_errors %}
             <div style="color:#dc2626; background:#fef2f2; padding:.75rem 1rem; border-radius:8px; font-size:.88rem; margin-bottom:1rem;">
                 {{ form_errors }}

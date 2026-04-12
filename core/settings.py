@@ -67,10 +67,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
-        'USER': 'postgres',
+        'USER': os.getenv('SUPABASE_DB_USER'),
         'PASSWORD': os.getenv('SUPABASE_DB_PASSWORD'),
         'HOST': os.getenv('SUPABASE_DB_HOST'),
-        'PORT': '5432',
+        'PORT': '6543',
     }
 }
 
@@ -123,7 +123,6 @@ JAZZMIN_SETTINGS = {
     "site_brand": "АУВК Парламент",
     "welcome_sign": "Панель управления",
     "copyright": "АУВК Парламент",
-    "site_logo":  'logo.jpg',
     "site_icon": None,
 
     "welcome_sign": "Welcome to the library",

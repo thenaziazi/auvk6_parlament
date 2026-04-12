@@ -24,12 +24,9 @@ class EventsListView(View):
 
 
 class EventDetailView(MinisterOrMemberRequiredMixin,View):
-    """Главная страница мероприятия — показывает инфо + задачи + форму создания."""
-
     def get_context(self, request, event):
         tasks = Tasks.objects.select_related("assigned_to", "ministry").filter(event=event)
 
-        # Для модального окна создания задачи (только министру)
         ministry_members = []
         user_ministries = []
         if request.user.is_authenticated and hasattr(request.user, 'ministry') and request.user.ministry:
@@ -103,17 +100,28 @@ class TaskStatusUpdateView(MinisterOrMemberRequiredMixin, View):
         return redirect("event_to_organize_detail", event_id=task.event_id)
     
 
-@method_decorator(staff_member_required,name='dispatch')
+@method_decorator(staff_member_required, name='dispatch')
 class EventDoneView(View):
-    def post(self, request,event_organized_id):
-        event_organized = get_object_or_404(EventsToOrganize,id=event_organized_id)
+    def post(self, request, event_organized_id):
+        event_organized = get_object_or_404(EventsToOrganize, id=event_organized_id)
+        
         if not event_organized.image:
-            messages.error(request,'Вставь картинку к мероприятию')
-            return redirect('event_detail_public',event_organized_id=event_organized_id)
+            messages.error(request, 'Вставь картинку к мероприятию')
+            return redirect('event_to_organize_detail', event_id=event_organized_id) 
+        
+        already_published = Events.objects.filter(
+            name=event_organized.name,
+            date=event_organized.date,
+        ).exists()
+        
+        if already_published:
+            messages.warning(request, 'Мероприятие уже было опубликовано!')
+            return redirect('event_to_organize_detail', event_id=event_organized_id)
+        
         new_public_event = Events.objects.create(
             name=event_organized.name,
             description=event_organized.description,
             date=event_organized.date,
             image=event_organized.image
         )
-        return redirect('event_detail_public',event_id=new_public_event.id)
+        return redirect('event_detail_public', event_id=new_public_event.id)

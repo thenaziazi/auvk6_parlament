@@ -29,7 +29,16 @@ class EventPhoto(models.Model):
     image = models.ImageField(upload_to='images')
 
     def __str__(self):
-        return self.event.name
+        return f"Фотография {self.event.name}"
+    
+
+class EventVideo(models.Model):
+    event = models.ForeignKey(Events, on_delete=models.CASCADE, related_name='videos')
+    video = models.FileField(upload_to='videos')
+
+
+    def __str__(self):
+        return f"Видео {self.event}"
 
 
 class EventsToOrganize(EventBase):

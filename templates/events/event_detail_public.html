@@ -62,7 +62,7 @@
 
     .event-description {
         font-size: 1.05rem;
-        font-weight: 400;
+        font-weight: 500;
         color: #4a3728;
         line-height: 1.75;
         margin: 0;
@@ -111,6 +111,13 @@
         
     }
     .gallery-item:hover img { transform: scale(1.05); }
+
+    .gallery-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    }
 
     @media (max-width: 800px) {
         .event-top { grid-template-columns: 1fr; gap: 1.5rem; }
@@ -169,6 +176,21 @@
         {% for photo in event.images.all %}
         <div class="gallery-item">
             <img src="{{ photo.image.url }}" alt="Фото {{ forloop.counter }}">
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% if event.videos.all %}
+<div class="gallery-section">
+    <div class="gallery-title">Видео с мероприятия</div>
+    <div class="gallery-grid">
+        {% for video in event.videos.all %}
+        <div class="gallery-item">
+            <video controls>
+                <source src="{{ video.video.url }}" type="video/mp4">
+            </video>
         </div>
         {% endfor %}
     </div>

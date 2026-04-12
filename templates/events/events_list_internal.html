@@ -4,23 +4,8 @@
 {% block extra_css %}
 <style>
     .section-title { font-size: 1.8rem; color: #2a2a2a; margin-bottom: .5rem; font-weight: 700; }
-    .section-title span { color: #7A0000; }
+    .section-title span { color: #7A0000; margin-bottom: 5rem;}
 
-    .internal-banner {
-        display: flex;
-        align-items: center;
-        gap: .75rem;
-        background: linear-gradient(135deg, #7A0000 0%, #a84000 100%);
-        color: white;
-        padding: .85rem 1.2rem;
-        border-radius: 10px;
-        margin-bottom: 2rem;
-        font-size: .95rem;
-        font-weight: 600;
-        box-shadow: 0 4px 16px rgba(122,0,0,0.25);
-    }
-    .internal-banner .lock-icon { font-size: 1.2rem; flex-shrink: 0; }
-    .internal-banner span { opacity: .85; font-weight: 400; font-size: .88rem; }
 
     .status-badge {
         display: inline-flex;
@@ -50,6 +35,7 @@
     }
 
     .events-grid {
+        margin-top: 2rem;
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 1.5rem;
@@ -112,15 +98,11 @@
 
 {% block content %}
 
-<div class="internal-banner">
-    <span class="lock-icon">🔒</span>
-    <div>
-        Внутренняя страница — только для членов Школьного Парламента
-        <br><span>Мероприятия в стадии организации. Гостям недоступно.</span>
-    </div>
-</div>
+
 
 <h2 class="section-title">Мероприятия <span>в организации</span></h2>
+
+
 
 <div class="events-grid">
     {% for event in events %}
