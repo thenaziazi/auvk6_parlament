@@ -14,7 +14,7 @@ DEBUG = os.getenv('DEBUG','False') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS','localhost').split(',')
 
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(',')
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS','').split(',')
 
 MY_APPS = [
     'apps.events',
