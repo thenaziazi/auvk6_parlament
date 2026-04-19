@@ -4,5 +4,5 @@
 db.sqlite3
 media/
 static/
-core/urls.py
 staticfiles/
+auvk6-parlament\core\urls.py
