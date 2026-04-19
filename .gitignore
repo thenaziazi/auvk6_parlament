@@ -4,3 +4,5 @@
 db.sqlite3
 media/
 static/
+core/urls.py
+staticfiles/

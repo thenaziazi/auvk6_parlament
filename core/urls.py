@@ -12,7 +12,7 @@ def render_page(request):
 
 urlpatterns = [
     path("", index, name="index"),
-    path('admin/', admin.site.urls),
+    path('auvk6-control/', admin.site.urls, name='admin'),
     path('users/',include('apps.users.urls')),
     path('tasks/',include('apps.tasks.urls')),
     path('events/',include('apps.events.urls')),

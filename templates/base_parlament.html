@@ -73,14 +73,17 @@
         </div>
         <div class="auth">
             {% if request.user.is_authenticated %}
-                <span>{{ request.user.username }}</span>
+                <span style="opacity: 0.7; font-size: .85rem;">{{ request.user.username }}</span>
+                {% if request.user.is_staff %}
+                    <a class="btn secondary" href="{% url 'admin:index' %}">Админ панель</a>
+                {% endif %}
                 <a class="btn secondary" href="{% url 'logout' %}">Выйти</a>
             {% else %}
                 <a class="btn secondary" href="{% url 'login' %}">Войти</a>
             {% endif %}
         </div>
-    </div>
 </header>
+
 
 <nav>
     <div class="wrap">
