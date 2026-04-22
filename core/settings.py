@@ -86,6 +86,7 @@ AWS_S3_ENDPOINT_URL = os.getenv('SUPABASE_STORAGE_URL')
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = 'public-read'
 AWS_S3_REGION_NAME = os.getenv('SUPABASE_STORAGE_REGION')
+AWS_S3_CUSTOM_DOMAIN = f"{os.getenv('SUPABASE_PROJECT_REF')}.supabase.co/storage/v1/object/public/{os.getenv('SUPABASE_STORAGE_BUCKET')}"
 
 
 
@@ -128,8 +129,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+
 
 
 AUTH_USER_MODEL = 'users.CustomUser'
